@@ -1,14 +1,26 @@
 import { useState } from 'react';
 import fetchRecipes from './Fetch';
+import Loading from './Loading';
 
 function App() {
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false); // Initialize to false
 
   const searchRecipes = async () => {
+    setLoading(true); 
     const results = await fetchRecipes(query);
     setRecipes(results);
+    setLoading(false); 
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
