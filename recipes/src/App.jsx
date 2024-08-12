@@ -1,18 +1,28 @@
 import { useState } from 'react';
 import fetchRecipes from './Fetch';
 import Loading from './Loading';
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 function App() {
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(false); // Initialize to false
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recipesPerPage = 6;
 
   const searchRecipes = async () => {
-    setLoading(true); 
+    setLoading(true);
     const results = await fetchRecipes(query);
     setRecipes(results);
-    setLoading(false); 
+    setLoading(false);
+    setCurrentPage(1); // Reset to the first page on a new search
   };
+
+  const indexOfLastRecipe = currentPage * recipesPerPage;
+  const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+  const currentRecipes = recipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (loading) {
     return (
@@ -42,7 +52,7 @@ function App() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {recipes.map((recipe, index) => (
+        {currentRecipes.map((recipe, index) => (
           <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden">
             <img src={recipe.recipe.image} alt={recipe.recipe.label} className="w-full h-48 object-cover" />
             <div className="p-4">
@@ -55,6 +65,35 @@ function App() {
           </div>
         ))}
       </div>
+
+      <div className="flex justify-center mt-6 space-x-2">
+  <button
+    onClick={() => paginate(currentPage - 1)}
+    disabled={currentPage === 1}
+    className={`py-2 px-4 rounded-lg ${currentPage === 1 ? 'bg-gray-300 text-gray-500' : 'bg-blue-600 text-white hover:bg-blue-700 transition'}`}
+  >
+    <FaArrowLeft/>
+  </button>
+  
+  {[...Array(Math.ceil(recipes.length / recipesPerPage)).keys()].map(number => (
+    <button
+      key={number + 1}
+      onClick={() => paginate(number + 1)}
+      className={`py-2 px-4 rounded-lg`}
+    >
+      {number + 1}
+    </button>
+  ))}
+  
+  <button
+    onClick={() => paginate(currentPage + 1)}
+    disabled={currentPage === Math.ceil(recipes.length / recipesPerPage)}
+    className={`py-2 px-4 rounded-lg ${currentPage === Math.ceil(recipes.length / recipesPerPage) ? 'bg-gray-300 text-gray-500' : 'bg-blue-600 text-white hover:bg-blue-700 transition'}`}
+  >
+    <FaArrowRight/>
+  </button>
+</div>
+     
     </div>
   );
 }
