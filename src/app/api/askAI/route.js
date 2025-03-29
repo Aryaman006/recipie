@@ -25,6 +25,7 @@ export async function POST(req) {
         max_tokens: 1000, // ✅ Lowered to avoid token limit issues
       }),
     });
+     console.log("response:", response);
 
     // ✅ Better error handling
     if (!response.ok) {
