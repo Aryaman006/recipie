@@ -47,9 +47,9 @@ export async function POST(req) {
       }
     );
   } catch (error) {
-    console.error('OpenRouter Error:', error);
+    console.error('OpenRouter Error:', error.message);
     return new Response(
-      JSON.stringify({ error: error }),
+      JSON.stringify({ error: error.message }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
