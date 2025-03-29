@@ -48,6 +48,7 @@ const Home = () => {
       }
 
       const data = await response.json();
+      console.log(data);
       setAiResponse(data.result); // ✅ Store AI response
     } catch (error) {
       console.error('AI Error:', error);
