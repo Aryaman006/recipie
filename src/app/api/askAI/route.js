@@ -22,7 +22,7 @@ export async function POST(req) {
       body: JSON.stringify({
         model: 'mistralai/mistral-small-3.1-24b-instruct:free',
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 500, // Reduced tokens
+        max_tokens: 1000, // Reduced tokens
       }),
       signal: controller.signal,
     });
