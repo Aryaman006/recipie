@@ -26,7 +26,7 @@ export async function POST(req) {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || 'Failed to generate response');
+      throw new Error(error);
     }
 
     const data = await response.json();
